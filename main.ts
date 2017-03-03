@@ -1,29 +1,32 @@
 import { Observable } from 'rxjs';
 
-let numbers = [1, 2, 3, 4, 5, 6];
+let output = document.getElementById("output");
+let button = document.getElementById("button");
 
-let source = Observable.fromEvent(document, "mousemove")
-    .map((e: MouseEvent) => {
-        return {
-            x: e.clientX,
-            y: e.clientY
-        };
-    })
-    .filter((e) => {
-        return e.y > 100;
-    })
-//  .map(n => {
-//     return n * 10
-// })
-// .filter(n => {
-//     return n !== 20;
-// })
-;
 
-source.subscribe(
+let click = Observable.fromEvent(button, "click");
+
+function load(url: string, callback: any) {
+    let xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("load", () => {
+        let response = JSON.parse(xhr.responseText);
+        callback(response);
+    });
+
+    xhr.open("GET", url);
+    xhr.send();
+}
+
+click.subscribe(
     value => {
-        document.getElementById("pos").innerHTML = `x: ${value.x}, y: ${value.y}`;
-        console.log(value);
+        load("movies.json", (data) => {
+            data.forEach(m => {
+                let div = document.createElement("div");
+                div.innerText = m.title;
+                output.appendChild(div);
+            });
+        });
     },
     e => {
         console.log(`error: ${e}`);
