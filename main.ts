@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 let numbers = [1, 2, 3];
 
-let source = Observable.ate((observer) => {
+let source = Observable.create((observer) => {
 
     let index = 0;
 
