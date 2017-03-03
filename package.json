@@ -1,0 +1,19 @@
+{
+  "name": "reactive",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "webpack-dev-server --watch --inline",
+    "postinstall": "typings install"
+  },
+  "dependencies": {
+    "rxjs": "^5.2.0"
+  },
+  "devDependencies": {
+    "ts-loader": "^2.0.1",
+    "typescript": "^2.2.1",
+    "typings": "^2.1.0",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
+  }
+}
