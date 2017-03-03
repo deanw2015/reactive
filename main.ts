@@ -1,35 +1,29 @@
 import { Observable } from 'rxjs';
 
-let numbers = [1, 2, 3];
+let numbers = [1, 2, 3, 4, 5, 6];
 
-let source = Observable.create((observer) => {
-
-    let index = 0;
-
-    let produceValue = () => {
-        observer.next(numbers[index++]);
-
-        if (index < numbers.length) {
-            setTimeout(produceValue, 500);
-        }
-        else {
-            setTimeout(() => {
-                observer.complete();
-            }, 500);
-        }
-    };
-    produceValue();
-})
-.map(n => {
-    return n * 10
-})
-.filter(n => {
-    return n !== 20;
-});
+let source = Observable.fromEvent(document, "mousemove")
+    .map((e: MouseEvent) => {
+        return {
+            x: e.clientX,
+            y: e.clientY
+        };
+    })
+    .filter((e) => {
+        return e.y > 100;
+    })
+//  .map(n => {
+//     return n * 10
+// })
+// .filter(n => {
+//     return n !== 20;
+// })
+;
 
 source.subscribe(
     value => {
-        console.log(`value: ${value}`);
+        document.getElementById("pos").innerHTML = `x: ${value.x}, y: ${value.y}`;
+        console.log(value);
     },
     e => {
         console.log(`error: ${e}`);
