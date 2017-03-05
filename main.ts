@@ -1,36 +1,34 @@
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/Observable/fromEvent';
+import 'rxjs';
+
+import { load, loadWithFetch } from './loader';
 
 let output = document.getElementById("output");
 let button = document.getElementById("button");
 
-
 let click = Observable.fromEvent(button, "click");
 
-function load(url: string, callback: any) {
-    let xhr = new XMLHttpRequest();
-
-    xhr.addEventListener("load", () => {
-        let response = JSON.parse(xhr.responseText);
-        callback(response);
+function renderMovies(movies) {
+    movies.forEach(m => {
+        let div = document.createElement("div");
+        div.innerText = m.title;
+        output.appendChild(div);
     });
-
-    xhr.open("GET", url);
-    xhr.send();
 }
 
-click.subscribe(
-    value => {
-        load("movies.json", (data) => {
-            data.forEach(m => {
-                let div = document.createElement("div");
-                div.innerText = m.title;
-                output.appendChild(div);
-            });
-        });
-    },
-    e => {
-        console.log(`error: ${e}`);
-    },
-    () => {
-        console.log("complete");
-    });
+let subscription =
+    load("movies.json").subscribe(
+        renderMovies,
+        e => console.log(`Error: ${e}`),
+        () => console.log("Complete")
+    );
+
+subscription.unsubscribe();
+
+click.flatMap(() => load("movies.json"))
+    .subscribe(
+    renderMovies,
+    e => console.log(`error: ${e}`),
+    () => console.log("complete!")
+    );
